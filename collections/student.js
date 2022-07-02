@@ -1,19 +1,18 @@
 const Student = require('../models/stydentSchema')
 const MentorSchema = require('../models/mentorSchema')
-const { findOne } = require('../models/stydentSchema')
 exports.Create_Student = async (req, res) => {
   try {
     //student exist or not checking
     const validStudent = await Student.findOne({
       admissionNumber: req.body.admissionNumber
     }).exec()
-   // student is exist return error message
+    // student is exist return error message
     if (validStudent) {
       return res.status(400).json({
         message: 'student already exist'
       })
     } else {
-         //student exist add student with menter status false
+      //student exist add student with menter status false
       const { name, admissionNumber, fatherName } = req.body
       const create = await Student.create({
         name,
@@ -85,7 +84,7 @@ exports.Assign_Chgange_Mentor_For_Student = async (req, res) => {
         )
         if (student_update && Mentor_update && Pop)
           return res.status(200).json({ message: 'all succees' })
-          else return res.status(400).json({message:"not updated "})
+        else return res.status(400).json({ message: 'not updated ' })
       }
 
       if (student_update && Mentor_update)
@@ -123,6 +122,16 @@ exports.UpdateValidStudents = async (req, res) => {
     return res
       .status(200)
       .json({ message: 'all update success fully', UpdateArray })
+  } catch (error) {
+    console.log(error)
+  }
+}
+exports.GetAllStudents = async (req, res) => {
+  try {
+    const students_all = await Student.find({})
+    return res
+      .status(200)
+      .json({ message: 'get students', Students: students_all })
   } catch (error) {
     console.log(error)
   }
